@@ -6,15 +6,18 @@
 /*   By: eedwards <eedwards@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:45:24 by eedwards          #+#    #+#             */
-/*   Updated: 2024/09/03 16:44:13 by eedwards         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:49:04 by eedwards         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <sys/types.h>
-#include "libft/libft.h"
+#include <errno.h>
+#include <stdio.h>
+
 //Write a program (main) in which the client takes two parameters/arguments
 //	The PID of the server to which it wants to send the message
 //	A message
@@ -31,7 +34,10 @@ int	main(int ac, char **av)
 	char	*message;
 
 	if (ac != 3)
+	{
 		perror("wrong input");
+		return (1);
+	}
 	pid = ft_atoi(av[1]);
 	message = av[2];
 	i = 0;
@@ -46,12 +52,12 @@ int	main(int ac, char **av)
 				kill(pid, SIGUSR1);
 			else
 				kill(pid, SIGUSR2);
-			upause(300); //why this amount of time?
+			usleep(300); //why this amount of time?
 			shift++;
 		}
 		i++;
 	}
-	if (kill(pid, SIGUSR1) == -1) //do I need to check for this?
+	//if (kill(pid, SIGUSR1) == -1) //do I need to check for this?
 		//error
 
 }
