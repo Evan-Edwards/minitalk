@@ -37,9 +37,9 @@ static void	handle_signal(int signal, siginfo_t *info, void *unused_context)
 		ft_putchar(c);
 		c = 0;
 		i = 0;
+		origin = 0;
 	}
-	if (info->si_pid == origin)
-		kill(info->si_pid, SIGUSR1);
+	kill(info->si_pid, SIGUSR1);
 }
 
 //first prints PID, then every time SIGUSR1 or SIGUSR2 are received it calls

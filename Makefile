@@ -14,7 +14,7 @@ CLIENT = client
 SERVER = server
 CC = cc -g
 RM = rm -rf
-CFLAGS = -I./libft/incl -Wall -Werror -Wextra
+CFLAGS = -I./libft/incl -Wall -Werror -Wextra -D_POSIX_C_SOURCE=200112L
 LFLAGS = -L./libft -lft
 LIBFT = libft
 LIBFTA = libft.a
@@ -25,14 +25,15 @@ S_SRC = server.c
 C_OBJS = $(C_SRC:.c=.o)
 S_OBJS = $(S_SRC:.c=.o)
 
-all: $(CLIENT) $(SERVER)
+all: $(LIBFT)/$(LIBFTA) $(CLIENT) $(SERVER)
+
+$(LIBFT)/$(LIBFTA):
+	make -C $(LIBFT)
 
 $(CLIENT): $(C_OBJS)
-	make -C $(LIBFT)
 	$(CC) $(CFLAGS) -o $(CLIENT) $(C_OBJS) $(LFLAGS)
 
 $(SERVER): $(S_OBJS)
-	make -C $(LIBFT)
 	$(CC) $(CFLAGS) -o $(SERVER) $(S_OBJS) $(LFLAGS)
 
 clean:

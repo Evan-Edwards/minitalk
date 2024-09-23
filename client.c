@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#define _POSIX_C_SOURCE 200112L
+#define _POSIX_C_SOURCE 200112L // Ensure POSIX compliance
+#include <unistd.h> // Include unistd.h directly after defining _POSIX_C_SOURCE
 #include "libft.h"
-#include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <sys/types.h>
@@ -25,6 +25,24 @@ static void	signal_handler(int sig)
 {
 	(void) sig;
 	g_received_signal = 1;
+}
+
+static void	send_bit(pid_t pid, int bit)
+{
+	int signal;
+
+	if (bit)
+		signal = SIGUSR1;
+	else
+		signal = SIGUSR2;
+	if (kill(pid, signal) == -1)
+	{
+		ft_putstr_fd("Error sending signal\n", 2);
+		exit(EXIT_FAILURE);
+	}
+	while (!g_received_signal)
+		pause();
+	g_received_signal = 0;
 }
 
 //Encrypt the message (I did the encryption via bits)
@@ -45,16 +63,7 @@ static void	send(pid_t pid, char *message)
 	{
 		shift = 7;
 		while (shift >= 0)
-		{
-			if (((message[i] >> shift) & 1) == 1)
-				kill(pid, SIGUSR1);
-			else
-				kill(pid, SIGUSR2);
-			while (!g_received_signal)
-				pause();
-			g_received_signal = 0;
-			shift--;
-		}
+			send_bit(pid, (message[i] >> shift--) & 1);
 		i++;
 	}
 	exit (EXIT_SUCCESS);
@@ -67,14 +76,14 @@ int	main(int ac, char **av)
 
 	if (ac != 3)
 	{
-		perror("Wrong input\n");
-		perror("Example of correct input: ./client <pid> <string>\n");
+		ft_putstr_fd("Wrong input\n", 2);
+		ft_putstr_fd("Example of correct input: ./client <pid> <string>\n", 2);
 		return (1);
 	}
 	pid = ft_atoi(av[1]);
 	if (pid <= 0)
 	{
-		perror("Invalid PID");
+		ft_putstr_fd("Invalid PID\n", 2);
 		return (1);
 	}
 	message = av[2];
