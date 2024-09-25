@@ -6,12 +6,12 @@
 /*   By: eedwards <eedwards@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:45:24 by eedwards          #+#    #+#             */
-/*   Updated: 2024/09/12 13:42:09 by eedwards         ###   ########.fr       */
+/*   Updated: 2024/09/25 10:47:01 by eedwards         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define _POSIX_C_SOURCE 200112L // Ensure POSIX compliance
-#include <unistd.h> // Include unistd.h directly after defining _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 200112L //?
+#include <unistd.h>
 #include "libft.h"
 #include <stdlib.h>
 #include <signal.h>
@@ -19,56 +19,39 @@
 #include <errno.h>
 #include <stdio.h>
 
-int	g_received_signal = 0;
-
-static void	signal_handler(int sig)
+// Sends a single character to the server by breaking it into bits
+// Each bit is sent as a signal: SIGUSR1 for 1, SIGUSR2 for 0
+// Exits the program if there's an error sending the signal
+static void	send_char(pid_t pid, char c)
 {
-	(void) sig;
-	g_received_signal = 1;
-}
+	int	bit;
 
-static void	send_bit(pid_t pid, int bit)
-{
-	int signal;
-
-	if (bit)
-		signal = SIGUSR1;
-	else
-		signal = SIGUSR2;
-	if (kill(pid, signal) == -1)
+	bit = 7;
+	while (bit >= 0)
 	{
-		ft_putstr_fd("Error sending signal\n", 2);
-		exit(EXIT_FAILURE);
+		if (c & (1 << bit))
+		{
+			if (kill(pid, SIGUSR1) == -1)
+			{
+				ft_putstr_fd("Error sending signal\n", 2);
+				exit(EXIT_FAILURE);
+			}
+		}
+		else
+		{
+			if (kill(pid, SIGUSR2) == -1)
+			{
+				ft_putstr_fd("Error sending signal\n", 2);
+				exit(EXIT_FAILURE);
+			}
+		}
+		usleep(100);
+		bit--;
 	}
-	while (!g_received_signal)
-		pause();
-	g_received_signal = 0;
 }
 
-//Encrypt the message (I did the encryption via bits)
-//Send the message to the server (via its PID)
-//Create a stop condition so that the server knows when it has finished
-// 	receiving the message
-static void	send(pid_t pid, char *message)
-{
-	int					shift;
-	int					i;
-	struct sigaction	sa;
-
-	sa.sa_handler = signal_handler;
-	sigemptyset(&sa.sa_mask);
-	sigaction(SIGUSR1, &sa, NULL);
-	i = 0;
-	while (message[i])
-	{
-		shift = 7;
-		while (shift >= 0)
-			send_bit(pid, (message[i] >> shift--) & 1);
-		i++;
-	}
-	exit (EXIT_SUCCESS);
-}
-
+//Sends a string to the server by calling send_char for each character
+//and then sending a null character to indicate the end of the string
 int	main(int ac, char **av)
 {
 	pid_t	pid;
@@ -87,5 +70,10 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	message = av[2];
-	send(pid, message);
+	while (*message)
+	{
+		send_char(pid, *message);
+		message++;
+	}
+	send_char(pid, '\0');
 }
