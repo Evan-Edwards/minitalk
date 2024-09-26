@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   minitalk.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eedwards <eedwards@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/28 12:11:37 by eedwards          #+#    #+#             */
-/*   Updated: 2024/09/26 17:40:04 by eedwards         ###   ########.fr       */
+/*   Created: 2024/09/26 17:27:37 by eedwards          #+#    #+#             */
+/*   Updated: 2024/09/26 17:34:15 by eedwards         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	unsigned int	i;
+#ifndef MINITALK_H
+# define MINITALK_H
 
-	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i])
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-}
+# define _POSIX_C_SOURCE 200112L
+
+# include "libft.h"
+# include <stdlib.h>
+# include <signal.h>
+# include <sys/types.h>
+# include <errno.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <sys/time.h>
+# include <time.h>
+
+#endif

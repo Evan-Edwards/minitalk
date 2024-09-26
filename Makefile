@@ -6,7 +6,7 @@
 #    By: eedwards <eedwards@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 16:26:36 by eedwards          #+#    #+#              #
-#    Updated: 2024/09/05 17:53:36 by eedwards         ###   ########.fr        #
+#    Updated: 2024/09/26 15:57:27 by eedwards         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ CLIENT = client
 SERVER = server
 CC = cc -g
 RM = rm -rf
-CFLAGS = -I./libft/incl -Wall -Werror -Wextra -D_POSIX_C_SOURCE=200112L
+CFLAGS = -I./libft/incl -Wall -Werror -Wextra
 LFLAGS = -L./libft -lft
 LIBFT = libft
 LIBFTA = libft.a

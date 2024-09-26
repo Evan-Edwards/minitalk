@@ -6,14 +6,14 @@
 #    By: eedwards <eedwards@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: Invalid date        by                   #+#    #+#              #
-#    Updated: 2024/09/04 15:43:42 by eedwards         ###   ########.fr        #
+#    Updated: 2024/09/04 14:41:22 by eedwards         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
-CC = cc
+CC = cc -g -I./incl
 RM = rm -f
-CFLAGS = -g -I./incl -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 MAKE_SILENT = make --no-print-directory
 
 LIBFT_SRCS = src/libft/ft_atoi.c src/libft/ft_bzero.c src/libft/ft_calloc.c \
